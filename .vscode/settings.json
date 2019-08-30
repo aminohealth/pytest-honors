@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        "**/__pycache__/": true,
+        ".venv/": true,
+        ".mypy_cache/": true,
+        ".pytest_cache/": true,
+        "pytest_honors.egg-info/": true,
+    },
+    "python.pythonPath": ".venv/bin/python3"
+}
