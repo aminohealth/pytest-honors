@@ -4,6 +4,8 @@ import enum
 from operator import attrgetter
 from typing import Callable, Dict, List, Type
 
+from pytest import ExitCode
+
 from .constraints import ConstraintsBase
 
 MAGIC_MARK = "honors"
@@ -89,8 +91,11 @@ def pytest_report_teststatus(report):
         _RESULTS[report.nodeid] = report.outcome
 
 
-def pytest_sessionfinish(session):
+def pytest_sessionfinish(session, exitstatus):
     """Report on or validate constraints coverage."""
+
+    if exitstatus not in {ExitCode.OK, ExitCode.TESTS_FAILED}:
+        return
 
     reportfile = session.config.getoption(OPT_MARKDOWN_REPORT) or session.config.getini(
         OPT_MARKDOWN_REPORT
