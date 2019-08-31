@@ -1,4 +1,5 @@
 from pytest_honors.constraints import ConstraintsBase
+from pytest_honors.constraints.iso27001 import ISO27001Controls
 
 import pytest
 
@@ -11,7 +12,7 @@ class MyConstraints(ConstraintsBase):
     walk = "Funnily"
 
 
-@pytest.mark.honors(MyConstraints.spam, MyConstraints.eggs)
+@pytest.mark.honors(MyConstraints.spam, MyConstraints.eggs, ISO27001Controls.A_12_5_3)
 def test_passes():
     """This test always passes."""
 

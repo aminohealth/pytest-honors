@@ -8,6 +8,8 @@ from .constraints import ConstraintsBase
 
 MAGIC_MARK = "honors"
 OPT_MARKDOWN_REPORT = "honors_report_markdown"
+OPT_REGRESSION_FAIL = "honors_regression_fail"
+CACHE_KEY_COUNTS = "honors_counts"
 
 _ITEMS: Dict[
     # This is a subclass of ConstraintsBase. Putting this at the top level lets us group related
@@ -41,10 +43,17 @@ def pytest_configure(config):
 def pytest_addoption(parser):
     """Configure options for command line and pytest.ini options."""
 
-    help_txt = "name of the honored constraints report file to write"
     group = parser.getgroup("honors")
-    group.addoption("--honors-report", action="store", dest=OPT_MARKDOWN_REPORT, help=help_txt)
-    parser.addini(OPT_MARKDOWN_REPORT, help_txt)
+
+    report_help = "name of the honored constraints report file to write"
+    group.addoption("--honors-report", action="store", dest=OPT_MARKDOWN_REPORT, help=report_help)
+    parser.addini(OPT_MARKDOWN_REPORT, report_help)
+
+    fail_help = "if set, fail tests when any constraint counts decrease"
+    group.addoption(
+        "--honors-regression-fail", action="store_true", dest=OPT_REGRESSION_FAIL, help=fail_help
+    )
+    parser.addini(OPT_REGRESSION_FAIL, fail_help, type="bool", default=False)
 
 
 def python_sessionstart():
@@ -81,36 +90,61 @@ def pytest_report_teststatus(report):
 
 
 def pytest_sessionfinish(session):
+    """Report on or validate constraints coverage."""
+
     reportfile = session.config.getoption(OPT_MARKDOWN_REPORT) or session.config.getini(
         OPT_MARKDOWN_REPORT
     )
-    if not reportfile:
-        return
+    if reportfile:
+        with open(reportfile, "w") as outfile:
+            for line in render_as_markdown(_ITEMS, _RESULTS):
+                outfile.write(line + "\n")
 
-    with open(reportfile, "w") as outfile:
-        for line in render_as_markdown(_ITEMS, _RESULTS):
-            outfile.write(line + "\n")
+    new_counts = {}
+    for category in _ITEMS.values():
+        for instance, tests in category.items():
+            new_counts[f"{instance.__class__.__name__}.{instance.name}"] = len(tests)
+
+    old_counts = session.config.cache.get(CACHE_KEY_COUNTS, None)
+    if old_counts and session.config.getini(OPT_REGRESSION_FAIL):
+        errors = []
+        for key, old_count in old_counts.items():
+            new_count = new_counts.get(key, 0)
+            if new_count < old_count:
+                errors.append(f"Constraint {key} count dropped from {old_count} to {new_count}")
+        if errors:
+            raise ValueError(errors)
+
+    session.config.cache.set(CACHE_KEY_COUNTS, new_counts)
 
 
-def first_item_name(lst):
-    """Return the name of the first item in the list."""
-    return lst[0].name
+def key_name(tpl):
+    """Return the name of the first item in the tuple."""
+
+    return tpl[0].name
 
 
-def first_item__name__(lst):
-    """Return the __name__ of the first item in the list."""
-    return lst[0].__name__
+def key__name__(tpl):
+    """Return the __name__ of the first item in the tuple."""
+
+    return tpl[0].__name__
 
 
 def render_as_markdown(items, results):
     """Yield markdown lines of a report on the given items and their results."""
 
-    for category, details in sorted(items.items(), key=first_item__name__):
+    first = True
+    for category, details in sorted(items.items(), key=key__name__):
+        if first:
+            first = False
+        else:
+            yield ""
+            yield "---"
         yield ""
         category_doc = category.__doc__.split("\n")[0]  # type: ignore
         yield f"# {category.__name__} - {category_doc}"
 
-        for instance, tests in sorted(details.items(), key=first_item_name):
+        for instance, tests in sorted(details.items(), key=key_name):
             yield ""
             yield f"## {instance.name}: {instance.value}"
             yield ""
