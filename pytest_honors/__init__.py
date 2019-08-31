@@ -1,11 +1,11 @@
-from operator import attrgetter
-
 import enum
-
-import pytest
+from operator import attrgetter
 
 MAGIC_MARK = "honors"
 REPORT_CONFIG = "honors_report"
+
+_ITEMS = {}
+_RESULTS = {}
 
 
 def pytest_configure(config):
@@ -24,16 +24,8 @@ def pytest_addoption(parser):
     parser.addini(REPORT_CONFIG, help_txt)
 
 
-_ITEMS = {}
-_RESULTS = {}
-
-
 def pytest_itemcollected(item):
-    markers = item.own_markers
-    # if issubclass(markers.__class__, enum.Enum):
-    #     markers = [markers]
-
-    for marker in markers:
+    for marker in item.own_markers:
         # This shouldn't happen if we're only looking at interesting marks, but it's cheap.
         if marker.name != MAGIC_MARK:
             continue
@@ -56,7 +48,7 @@ def python_sessionstart():
     _RESULTS.clear()
 
 
-def pytest_sessionfinish(session, exitstatus):
+def pytest_sessionfinish(session):
     reportfile = session.config.getoption(REPORT_CONFIG) or session.config.getini(REPORT_CONFIG)
     if not reportfile:
         return
