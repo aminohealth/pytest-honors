@@ -1,9 +1,9 @@
-import enum
+from pytest_honors.constraints import ConstraintsBase
 
 import pytest
 
 
-class MyConstraints(enum.Enum):
+class MyConstraints(ConstraintsBase):
     """Sample constraints for test purposes."""
 
     spam = "Does a thing"
