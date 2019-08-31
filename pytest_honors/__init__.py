@@ -1,8 +1,11 @@
+from operator import attrgetter
+
 import enum
 
 import pytest
 
 MAGIC_MARK = "honors"
+REPORT_CONFIG = "honors_report"
 
 
 def pytest_configure(config):
@@ -15,13 +18,10 @@ def pytest_configure(config):
 
 
 def pytest_addoption(parser):
+    help_txt = "name of the honored constraints report file to write"
     group = parser.getgroup("honors")
-    group.addoption(
-        "--honors-report",
-        action="store",
-        dest="honors_report",
-        help="write a report of honored constraints to the named file.",
-    )
+    group.addoption("--honors-report", action="store", dest=REPORT_CONFIG, help=help_txt)
+    parser.addini(REPORT_CONFIG, help_txt)
 
 
 _ITEMS = {}
@@ -57,10 +57,12 @@ def python_sessionstart():
 
 
 def pytest_sessionfinish(session, exitstatus):
-    reportfile = "foo.md"
+    reportfile = session.config.getoption(REPORT_CONFIG) or session.config.getini(REPORT_CONFIG)
+    if not reportfile:
+        return
 
     with open(reportfile, "w") as outfile:
-        for line in render_as_markdown():
+        for line in render_as_markdown(_ITEMS, _RESULTS):
             outfile.write(line + "\n")
 
 
@@ -69,8 +71,13 @@ def first_item_name(lst):
     return lst[0].name
 
 
-def render_as_markdown():
-    for category, details in sorted(_ITEMS.items(), key=lambda x: (x[0].__name__)):
+def first_item__name__(lst):
+    """Return the __name__ of the first item in the list."""
+    return lst[0].__name__
+
+
+def render_as_markdown(items, results):
+    for category, details in sorted(items.items(), key=first_item__name__):
         yield ""
         category_doc = category.__doc__.split("\n")[0]  # type: ignore
         yield f"# {category.__name__} - {category_doc}"
@@ -81,8 +88,8 @@ def render_as_markdown():
             yield ""
             yield "Supporting evidence:"
             yield ""
-            for test in sorted(tests, key=lambda x: x.name):
-                result = _RESULTS[test.nodeid]
+            for test in sorted(tests, key=attrgetter("name")):
+                result = results[test.nodeid]
                 if result != "passed":
                     result = f"**{result}**"
                 yield f"- Name: {test.name}"

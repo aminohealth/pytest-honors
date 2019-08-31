@@ -17,6 +17,7 @@ def test_passes():
 
 
 @pytest.mark.honors(MyConstraints.eggs, MyConstraints.walk)
+@pytest.mark.xfail(strict=True)
 def test_fails():
     """This test always fails."""
     assert False
