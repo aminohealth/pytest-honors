@@ -33,7 +33,8 @@ def pytest_itemcollected(item):
         for constraint in marker.args:
             if not isinstance(constraint, enum.Enum):
                 raise TypeError(
-                    f"Honored constraints on {item} must be instances of Enum, not {constraint.__class__}."
+                    f"Honored constraints on {item} must be instances of Enum, not "
+                    f"{constraint.__class__}."
                 )
             _ITEMS.setdefault(constraint.__class__, {}).setdefault(constraint, []).append(item)
 
