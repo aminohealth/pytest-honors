@@ -18,7 +18,7 @@ pytest-honors
     :target: https://ci.appveyor.com/project/kstrauser/pytest-honors/branch/master
     :alt: See Build Status on AppVeyor
 
-Enforce coverage and report on tests that honor constraints
+Report on tests that honor constraints and guard against regressions
 
 ----
 
@@ -105,9 +105,10 @@ This shows us all controls that are honored by the tests that we ran. Want to sh
 
 When run like ``pytest --honors-store-counts``, pytest-honors saves the number of tests honoring each constraint. Later you can run ``pytest --honors-regression-fail``, and if the coverage for any controls has decreased since the last test run, then pytest fails. Suppose an intern deletes the ``test_unique_email`` unit test. That results in the error::
 
-    ValueError: ['Constraint MyControls.EmailAddressesMustBeUnique honors count dropped from 1 to 0']
+  ValueError: ['Constraint MyControls.EmailAddressesMustBeUnique honors count dropped from 1 to 0']
 
 You can integrate this in your CI pipeline and know that a rogue developer isn't deleting the constraints you care about.
+
 
 Contributing
 ------------
