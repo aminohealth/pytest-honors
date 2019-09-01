@@ -20,6 +20,7 @@ setup(
     maintainer_email="kirk@amino.com",
     license="MIT",
     url="https://github.com/kstrauser/pytest-honors",
+    project_urls={"Documentation": "https://pytest-honors.readthedocs.io/en/latest/"},
     description="Enforce coverage and report on tests that honor constraints",
     long_description=read("README.rst"),
     py_modules=["pytest_honors"],

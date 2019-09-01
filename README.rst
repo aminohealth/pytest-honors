@@ -27,6 +27,8 @@ Intro
 
 pytest-honors is a `pytest`_ plugin for automatically generating reports showing which of your project's unit tests "honor" (or "prove" or "demonstrate" or "support") various constraints that you care about. It can also be integrated with your build pipeline to make sure that you never accidentally remove the tests that are most important to you.
 
+Below is a summary of features. More information is available at the `pytest-honors documentation`_ page.
+
 Features
 --------
 
@@ -136,3 +138,4 @@ If you encounter any problems, please `file an issue`_ along with a detailed des
 .. _`tox`: https://tox.readthedocs.io/en/latest/
 .. _`pip`: https://pypi.org/project/pip/
 .. _`PyPI`: https://pypi.org/project
+.. _`pytest-honors documentation`: https://pytest-honors.readthedocs.io/en/latest/

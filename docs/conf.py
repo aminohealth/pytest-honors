@@ -49,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'pytest-honors'
-copyright = u'2015, Kirk Strauser'
+copyright = u'2019, Kirk Strauser'
 author = u'Kirk Strauser'
 
 # The version info for the project you're documenting, acts as replacement for
