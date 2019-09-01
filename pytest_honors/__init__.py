@@ -12,7 +12,7 @@ MAGIC_MARK = "honors"
 OPT_MARKDOWN_REPORT = "honors_report_markdown"
 OPT_REGRESSION_FAIL = "honors_regression_fail"
 OPT_STORE_COUNTS = "honors_store_counts"
-CACHE_KEY_COUNTS = "honors_counts"
+CACHE_KEY_COUNTS = "honors/counts"
 
 _ITEMS: Dict[
     # This is a subclass of ConstraintsGroup. Putting this at the top level lets us group related
@@ -57,7 +57,9 @@ def pytest_addoption(parser):
     group = parser.getgroup("honors")
 
     report_help = "name of the honored constraints report file to write"
-    group.addoption("--honors-report", action="store", dest=OPT_MARKDOWN_REPORT, help=report_help)
+    group.addoption(
+        "--honors-report-markdown", action="store", dest=OPT_MARKDOWN_REPORT, help=report_help
+    )
     parser.addini(OPT_MARKDOWN_REPORT, report_help)
 
     fail_help = "if set, fail tests when any constraint counts decrease"
@@ -88,14 +90,14 @@ def pytest_itemcollected(item):
         if marker.name != MAGIC_MARK:
             continue
 
-        for constraint in marker.args:
+        for arg in marker.args:
             # Fail loudly if there's something inside an honors clause but constraints
-            if not isinstance(constraint, ConstraintsGroup):
+            if not isinstance(arg, ConstraintsGroup):
                 raise TypeError(
                     f"Honored constraints on {item} must be instances of ConstraintsGroup, not "
-                    f"{constraint.__class__}."
+                    f"{arg.__class__}."
                 )
-            _ITEMS.setdefault(constraint.__class__, {}).setdefault(constraint, []).append(item)
+            _ITEMS.setdefault(arg.__class__, {}).setdefault(arg, []).append(item)
 
 
 def pytest_report_teststatus(report):
@@ -119,9 +121,9 @@ def pytest_sessionfinish(session, exitstatus):
                 outfile.write(line + "\n")
 
     new_counts = {}
-    for category in _ITEMS.values():
-        for instance, tests in category.items():
-            new_counts[f"{instance.__class__.__name__}.{instance.name}"] = len(tests)
+    for group_members in _ITEMS.values():
+        for constraint, tests in group_members.items():
+            new_counts[f"{constraint.__class__.__name__}.{constraint.name}"] = len(tests)
 
     if get_config_item(session, OPT_REGRESSION_FAIL):
         fail_on_regressions(session, new_counts)
@@ -150,19 +152,19 @@ def render_as_markdown(items, results):
     """Yield markdown lines of a report on the given items and their results."""
 
     first = True
-    for category, details in sorted(items.items(), key=key__name__):
+    for constraint_group, group_members in sorted(items.items(), key=key__name__):
         if first:
             first = False
         else:
             yield ""
             yield "---"
         yield ""
-        category_doc = category.__doc__.split("\n")[0]  # type: ignore
-        yield f"# {category.__name__} - {category_doc}"
+        constraint_group_doc = constraint_group.__doc__.split("\n")[0]  # type: ignore
+        yield f"# {constraint_group.__name__} - {constraint_group_doc}"
 
-        for instance, tests in sorted(details.items(), key=key_name):
+        for constraint, tests in sorted(group_members.items(), key=key_name):
             yield ""
-            yield f"## {instance.name}: {instance.value}"
+            yield f"## {constraint.name}: {constraint.value}"
             yield ""
             yield "Supporting evidence:"
             yield ""

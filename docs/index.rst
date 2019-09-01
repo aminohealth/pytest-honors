@@ -36,10 +36,52 @@ pytest-honors wants to help you. For example, given this code::
 In the language of pytest-honors, we say that ``test_password_string`` "honors" the PasswordsMustBeGood constraint and that ``test_unique_email`` honors the EmailAddressesMustBeUnique constraint. This is valuable on its own as developers can tell at a glance that each test actually matters to the overall design of the system, and they're not just there because a new boss wants everyone to reach 100% test coverage. By moving important documentation to a machine-readable format that lives next to the code, we can put that information to work to give you some very useful tools.
 
 
+Terminology
+===========
+
+For explicitness:
+
+constraint
+  A condition -- maybe a design requirement, or a security control, or a contractual obligation -- that must be met at all times.
+
+constraint group
+  A namespace of constraints that logically belong together.
+
+honors
+  A test "honors" a constraint when it can be used to demonstrate that a constraint is being met.
+
+honorers
+  The collection of tests that honor a particular constraint or constraint group.
+
+
+Code usage
+==========
+
+To build your own collections of constraints, import and subclass ``pytest_honors.constraints.ConstraintsGroup`` as in the `What it does`_ example above::
+
+  from pytest_honors.constraints import ConstraintsGroup
+
+  class MyControls(ConstraintsGroup):
+      PasswordsMustBeGood = "We don't want bad passwords"
+      EmailAddressesMustBeUnique = "No two users may have the same email"
+
+pytest-honors adds a new ``honors`` marker that you can use to add one or more constraints to a test::
+
+  @pytest.mark.honors(
+      MyControls.PasswordsMustBeGood,
+      MyControls.EmailAddressesMustBeUnique
+  )
+  def test_everything():
+      assert check_password(...)
+      assert multiple_accounts_with_same_email_fail()
+
+That's it! Again, even if you don't use any other pytest-honors features, now you have a consistent, easily searchable way of marking your most important tests. Perhaps these are the ones that demonstrate the underlying foundation of your whole project, or they identify security requirements that can't ever be casually dismissed without significant planning, or they prove that a serious bug has been fixed and can't recur. In any case, it would be bad if a well-meaning developer removed those tests, especially during a large refactoring where the changes might get lost in the shuffle.
+
+
 Command line usage
 ==================
 
-pytest-honors adds three new options to your pytest command line (or `pytest.ini`_):
+Once you've annotated your tests, use the pytest-honors pytest plugin to make them work for you. It adds three new options to your pytest command line (or `pytest.ini`_):
 
 Reporting
 ---------
@@ -89,30 +131,6 @@ Keeping fixed things fixed
 You can integrate this in your CI pipeline and know that a rogue developer isn't deleting the constraints you care about.
 
 
-Code usage
-==========
-
-To build your own collections of constraints, import and subclass ``pytest_honors.constraints.ConstraintsGroup`` as in the `What it does`_ example above::
-
-  from pytest_honors.constraints import ConstraintsGroup
-
-  class MyControls(ConstraintsGroup):
-      PasswordsMustBeGood = "We don't want bad passwords"
-      EmailAddressesMustBeUnique = "No two users may have the same email"
-
-pytest-honors adds a new ``honors`` marker that you can use to add one or more constraints to a test::
-
-  @pytest.mark.honors(
-      MyControls.PasswordsMustBeGood,
-      MyControls.EmailAddressesMustBeUnique
-  )
-  def test_everything():
-      assert check_password(...)
-      assert multiple_accounts_with_same_email_fail()
-
-That's it! Again, even if you don't use any other pytest-honors features, now you have a consistent, easily searchable way of marking your most important tests. Perhaps these are the ones that demonstrate the underlying foundation of your whole project, or they identify security requirements that can't ever be casually dismissed without significant planning, or they prove that a serious bug has been fixed and can't recur. In any case, it would be bad if a well-meaning developer removed those tests, especially during a large refactoring where the changes might get lost in the shuffle.
-
-
 Installation
 ============
 
@@ -121,8 +139,8 @@ Install with `pip`_ (package on `PyPI`_; source at `GitHub`_)::
   $ pip install pytest-honors
 
 
-Built-in constraints
-====================
+Built-in constraint groups
+==========================
 
 pytest-honors comes with a set of ISO 27001 control definitions. A long-term goal of the project is to serve as a convenient collection of standard constraints.
 
@@ -134,6 +152,8 @@ Contributions are very welcome. Tests can be run with `tox`_, please ensure
 the coverage at least stays the same before you submit a pull request.
 
 Especially appreciated, and requiring the least amount of coding experience, would be other constraint definitions so that new users have a pleasant "batteries included" experience.
+
+All code is formatted with `Black`_.
 
 
 Copyright
@@ -168,9 +188,10 @@ v0.1.0 / v0.1.1, 2019-08-31: Initial public releases.
 .. * :ref:`search`
 
 .. _`Amino`: https://amino.com/
-.. _`pytest`: https://github.com/pytest-dev/pytest
-.. _`pytest.ini`: https://docs.pytest.org/en/latest/customize.html
-.. _`pip`: https://pypi.org/project/pip/
-.. _`PyPI`: https://pypi.org/project/pytest-honors/
+.. _`Black`: https://github.com/psf/black
 .. _`GitHub`: https://github.com/kstrauser/pytest-honors
 .. _`MIT`: http://opensource.org/licenses/MIT
+.. _`pip`: https://pypi.org/project/pip/
+.. _`PyPI`: https://pypi.org/project/pytest-honors/
+.. _`pytest.ini`: https://docs.pytest.org/en/latest/customize.html
+.. _`pytest`: https://github.com/pytest-dev/pytest
