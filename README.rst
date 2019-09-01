@@ -14,8 +14,8 @@ pytest-honors
     :target: https://travis-ci.org/aminohealth/pytest-honors
     :alt: See Build Status on Travis CI
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/aminohealth/pytest-honors?branch=master
-    :target: https://ci.appveyor.com/project/aminohealth/pytest-honors/branch/master
+.. image:: https://ci.appveyor.com/api/projects/status/github/kstrauser/pytest-honors-p7p8g?branch=master
+    :target: https://ci.appveyor.com/project/kstrauser/pytest-honors-p7p8g/branch/master
     :alt: See Build Status on AppVeyor
 
 Report on tests that honor constraints and guard against regressions
