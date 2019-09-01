@@ -22,19 +22,24 @@ Enforce coverage and report on tests that honor constraints
 
 ----
 
-This `pytest`_ plugin was generated with `Cookiecutter`_ along with `@hackebrot`_'s `cookiecutter-pytest-plugin`_ template.
+Intro
+-----
 
+pytest-honors is a `pytest`_ plugin for automatically generating reports showing which of your project's unit tests "honor" (or "prove" or "demonstrate" or "support") various constraints that you care about. It can also be integrated with your build pipeline to make sure that you never accidentally remove the tests that are most important to you.
 
 Features
 --------
 
-* TODO
+* Lightning fast! Since it piggybacks onto pytest's own test discovery and reporting system, it adds almost no measurable overhead to your testing process.
+* Generate nicely human-readable Markdown reports, suitable for handing to an auditor.
+* Automatically ensure that your test coverage only ever increases with time. Fixed things stay fixed!
+* Comes with ISO 27001 control definitions (but it's super easy to add your own).
 
 
 Requirements
 ------------
 
-* TODO
+* pytest 3.5.0 or newer.
 
 
 Installation
@@ -48,7 +53,7 @@ You can install "pytest-honors" via `pip`_ from `PyPI`_::
 Usage
 -----
 
-You've written several thousand unit tests, but you don't know which are actually *important* to you. Your team could laboriously struggle to keep docs up to date, but realistically that almost never works out as hoped. Even if your documentation is perfect, develops in the middle of a large refactoring don't want to flip between static text and their code.
+You've written several thousand unit tests, but you don't know which are actually *important* to you. Your team could laboriously struggle to keep docs up to date, but realistically that almost never works out as hoped. Even if your documentation is perfect, developers in the middle of a large refactoring project don't want to flip between static text and their code.
 
 pytest-honors wants to help you. For example, given this code::
 
@@ -70,7 +75,7 @@ pytest-honors wants to help you. For example, given this code::
         with pytest.raises(ValueError):
             add_account("User Two", "spam@example.com")
 
-In the language of pytest-honors, we say that ``test_password_string`` "honors" the PasswordsMustBeGood constraint and that ``test_unique_email`` honors the EmailAddressesMustBeUnique constraint. This is valuable on its own, as developers can tell at a glance that each test actually matters to the overall design of the system and they're not just there because a new boss wants everyone to reach 100% test coverage.But pytest-honors gives you some very important tools. By moving important documentation to a machine-readable, we can put that information to work.
+In the language of pytest-honors, we say that ``test_password_string`` "honors" the PasswordsMustBeGood constraint and that ``test_unique_email`` honors the EmailAddressesMustBeUnique constraint. This is valuable on its own as developers can tell at a glance that each test actually matters to the overall design of the system, and they're not just there because a new boss wants everyone to reach 100% test coverage. By moving important documentation to a machine-readable format that lives next to the code, we can put that information to work to give you some very useful tools.
 
 When run like ``pytest --honors-report-markdown report.md``, we can get nice, human-readable documentation like:
 
@@ -106,13 +111,17 @@ You can integrate this in your CI pipeline and know that a rogue developer isn't
 
 Contributing
 ------------
+
 Contributions are very welcome. Tests can be run with `tox`_, please ensure
 the coverage at least stays the same before you submit a pull request.
+
+Especially appreciated, and requiring the least amount of coding experience, would be other constraint definitions so that new users have a pleasant "batteries included" experience.
+
 
 License
 -------
 
-Distributed under the terms of the `MIT`_ license, "pytest-honors" is free and open source software
+Distributed under the terms of the `MIT`_ license, "pytest-honors" is free and open source software.
 
 
 Issues
@@ -120,13 +129,7 @@ Issues
 
 If you encounter any problems, please `file an issue`_ along with a detailed description.
 
-.. _`Cookiecutter`: https://github.com/audreyr/cookiecutter
-.. _`@hackebrot`: https://github.com/hackebrot
 .. _`MIT`: http://opensource.org/licenses/MIT
-.. _`BSD-3`: http://opensource.org/licenses/BSD-3-Clause
-.. _`GNU GPL v3.0`: http://www.gnu.org/licenses/gpl-3.0.txt
-.. _`Apache Software License 2.0`: http://www.apache.org/licenses/LICENSE-2.0
-.. _`cookiecutter-pytest-plugin`: https://github.com/pytest-dev/cookiecutter-pytest-plugin
 .. _`file an issue`: https://github.com/kstrauser/pytest-honors/issues
 .. _`pytest`: https://github.com/pytest-dev/pytest
 .. _`tox`: https://tox.readthedocs.io/en/latest/
