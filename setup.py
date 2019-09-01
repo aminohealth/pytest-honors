@@ -13,7 +13,7 @@ def read(fname):
 
 setup(
     name="pytest-honors",
-    version="0.1.1",
+    version="0.1.2",
     author="Kirk Strauser",
     author_email="kirk@amino.com",
     maintainer="Kirk Strauser",
