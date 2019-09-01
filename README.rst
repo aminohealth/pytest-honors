@@ -79,7 +79,7 @@ In the language of pytest-honors, we say that ``test_password_string`` "honors" 
 
 When run like ``pytest --honors-report-markdown report.md``, we can get nice, human-readable documentation like:
 
-.. code-block:: markdown
+.. code-block:: text
 
     # MyControls - An enumeration.
 
