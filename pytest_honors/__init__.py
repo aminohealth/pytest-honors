@@ -11,6 +11,7 @@ from .constraints import ConstraintsBase
 MAGIC_MARK = "honors"
 OPT_MARKDOWN_REPORT = "honors_report_markdown"
 OPT_REGRESSION_FAIL = "honors_regression_fail"
+OPT_STORE_COUNTS = "honors_store_counts"
 CACHE_KEY_COUNTS = "honors_counts"
 
 _ITEMS: Dict[
@@ -24,6 +25,7 @@ _ITEMS: Dict[
         List[Callable],
     ],
 ] = {}
+
 _RESULTS: Dict[
     # The key of this dict is the pytest-style path to a test, like
     # `tests/test_honors.py::test_passes'.
@@ -31,6 +33,13 @@ _RESULTS: Dict[
     # Values of this dict are each test's results, like 'passed', 'failed', or 'skipped'.
     str,
 ] = {}
+
+
+# pytest hooks
+
+# pytest inspects its plugins for functions with specific names. If it finds them, it calls
+# those functions at the appropriate point in its processing flow. For a full explanation of these
+# "hooks", see https://doc.pytest.org/en/latest/reference.html
 
 
 def pytest_configure(config):
@@ -56,6 +65,12 @@ def pytest_addoption(parser):
         "--honors-regression-fail", action="store_true", dest=OPT_REGRESSION_FAIL, help=fail_help
     )
     parser.addini(OPT_REGRESSION_FAIL, fail_help, type="bool", default=False)
+
+    write_help = "if set, store honors counts for later comparison"
+    group.addoption(
+        "--honors-store-counts", action="store_true", dest=OPT_STORE_COUNTS, help=write_help
+    )
+    parser.addini(OPT_STORE_COUNTS, write_help, type="bool", default=False)
 
 
 def python_sessionstart():
@@ -91,15 +106,6 @@ def pytest_report_teststatus(report):
         _RESULTS[report.nodeid] = report.outcome
 
 
-def get_config_item(session, name):
-    """Return the given config item from either the command line or pytest.ini"""
-
-    value = session.config.getoption(name)
-    if value is None:
-        value = session.config.getini(name)
-    return value
-
-
 def pytest_sessionfinish(session, exitstatus):
     """Report on or validate constraints coverage."""
 
@@ -120,7 +126,8 @@ def pytest_sessionfinish(session, exitstatus):
     if get_config_item(session, OPT_REGRESSION_FAIL):
         fail_on_regressions(session, new_counts)
 
-    session.config.cache.set(CACHE_KEY_COUNTS, new_counts)
+    if get_config_item(session, OPT_STORE_COUNTS):
+        session.config.cache.set(CACHE_KEY_COUNTS, new_counts)
 
 
 def fail_on_regressions(session, new_counts):
@@ -167,6 +174,18 @@ def render_as_markdown(items, results):
                 yield f'  Explanation: "{test.obj.__doc__}"'
                 yield f"  Path: {test.nodeid}"
                 yield f"  Result: {result}"
+
+
+# Helpers
+
+
+def get_config_item(session, name):
+    """Return the given config item from either the command line or pytest.ini"""
+
+    value = session.config.getoption(name)
+    if value is None:
+        value = session.config.getini(name)
+    return value
 
 
 def key_name(tpl):

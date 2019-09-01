@@ -103,7 +103,7 @@ When run like ``pytest --honors-report-markdown report.md``, we can get nice, hu
 
 This shows us all controls that are honored by the tests that we ran. Want to show your auditor that you're checking important controls in your code? Now you have evidence.
 
-When run like ``pytest --honors-regression-fail``, if the coverage for any controls has decreased since the last test run, the pytest-honors fails. Suppose an intern deletes the ``test_unique_email`` unit test. That results in the error::
+When run like ``pytest --honors-store-counts``, pytest-honors saves the number of tests honoring each constraint. Later you can run ``pytest --honors-regression-fail``, and if the coverage for any controls has decreased since the last test run, then pytest fails. Suppose an intern deletes the ``test_unique_email`` unit test. That results in the error::
 
     ValueError: ['Constraint MyControls.EmailAddressesMustBeUnique honors count dropped from 1 to 0']
 
