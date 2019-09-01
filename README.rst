@@ -60,9 +60,9 @@ You've written several thousand unit tests, but you don't know which are actuall
 pytest-honors wants to help you. For example, given this code::
 
     import pytest
-    from pytest_honors.constraints import ConstraintsBase
+    from pytest_honors.constraints import ConstraintsGroup
 
-    class MyControls(ConstraintsBase):
+    class MyControls(ConstraintsGroup):
         PasswordsMustBeGood = "We don't want bad passwords"
         EmailAddressesMustBeUnique = "No two users may have the same email"
 

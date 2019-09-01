@@ -1,9 +1,9 @@
 """Define controls found in ISO 27001."""
 
-from . import ConstraintsBase
+from . import ConstraintsGroup
 
 
-class ISO27001Controls(ConstraintsBase):
+class ISO27001Controls(ConstraintsGroup):
     """Enumeration of ISO 27001 controls.
 
     Using the definitions from

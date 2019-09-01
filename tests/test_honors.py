@@ -1,17 +1,17 @@
 """Test the pytest_honors package."""
 
 import pytest_honors
-from pytest_honors.constraints import ConstraintsBase
+from pytest_honors.constraints import ConstraintsGroup
 
 
-class SomeControls(ConstraintsBase):
+class SomeControls(ConstraintsGroup):
     """Some things are here."""
 
     spam = "Spam"
     eggs = "Eggs"
 
 
-class OtherControls(ConstraintsBase):
+class OtherControls(ConstraintsGroup):
     """Other things are here."""
 
     favorite_color = "blue"

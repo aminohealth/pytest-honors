@@ -16,9 +16,9 @@ You've written several thousand unit tests, but you don't know which are actuall
 pytest-honors wants to help you. For example, given this code::
 
   import pytest
-  from pytest_honors.constraints import ConstraintsBase
+  from pytest_honors.constraints import ConstraintsGroup
 
-  class MyControls(ConstraintsBase):
+  class MyControls(ConstraintsGroup):
       PasswordsMustBeGood = "We don't want bad passwords"
       EmailAddressesMustBeUnique = "No two users may have the same email"
 
@@ -92,11 +92,11 @@ You can integrate this in your CI pipeline and know that a rogue developer isn't
 Code usage
 ==========
 
-To build your own collections of constraints, import and subclass ``pytest_honors.constraints.ConstraintsBase`` as in the `What it does`_ example above::
+To build your own collections of constraints, import and subclass ``pytest_honors.constraints.ConstraintsGroup`` as in the `What it does`_ example above::
 
-  from pytest_honors.constraints import ConstraintsBase
+  from pytest_honors.constraints import ConstraintsGroup
 
-  class MyControls(ConstraintsBase):
+  class MyControls(ConstraintsGroup):
       PasswordsMustBeGood = "We don't want bad passwords"
       EmailAddressesMustBeUnique = "No two users may have the same email"
 

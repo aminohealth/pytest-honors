@@ -2,11 +2,11 @@
 
 from pytest import mark
 
-from pytest_honors.constraints import ConstraintsBase
+from pytest_honors.constraints import ConstraintsGroup
 from pytest_honors.constraints.iso27001 import ISO27001Controls
 
 
-class MyConstraints(ConstraintsBase):
+class MyConstraints(ConstraintsGroup):
     """Sample constraints for test purposes."""
 
     spam = "Does a thing"

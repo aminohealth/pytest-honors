@@ -6,7 +6,7 @@ from typing import Callable, Dict, List, Type
 
 from pytest import ExitCode
 
-from .constraints import ConstraintsBase
+from .constraints import ConstraintsGroup
 
 MAGIC_MARK = "honors"
 OPT_MARKDOWN_REPORT = "honors_report_markdown"
@@ -15,9 +15,9 @@ OPT_STORE_COUNTS = "honors_store_counts"
 CACHE_KEY_COUNTS = "honors_counts"
 
 _ITEMS: Dict[
-    # This is a subclass of ConstraintsBase. Putting this at the top level lets us group related
+    # This is a subclass of ConstraintsGroup. Putting this at the top level lets us group related
     # constraints together for reporting.
-    Type[ConstraintsBase],
+    Type[ConstraintsGroup],
     Dict[
         # This is one of the members of the class,
         enum.Enum,
@@ -90,9 +90,9 @@ def pytest_itemcollected(item):
 
         for constraint in marker.args:
             # Fail loudly if there's something inside an honors clause but constraints
-            if not isinstance(constraint, ConstraintsBase):
+            if not isinstance(constraint, ConstraintsGroup):
                 raise TypeError(
-                    f"Honored constraints on {item} must be instances of ConstraintsBase, not "
+                    f"Honored constraints on {item} must be instances of ConstraintsGroup, not "
                     f"{constraint.__class__}."
                 )
             _ITEMS.setdefault(constraint.__class__, {}).setdefault(constraint, []).append(item)
