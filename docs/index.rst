@@ -191,7 +191,7 @@ v0.1.0 / v0.1.1, 2019-08-31: Initial public releases.
 
 .. _`Amino`: https://amino.com/
 .. _`Black`: https://github.com/psf/black
-.. _`GitHub`: https://github.com/kstrauser/pytest-honors
+.. _`GitHub`: https://github.com/aminohealth/pytest-honors
 .. _`MIT`: http://opensource.org/licenses/MIT
 .. _`pip`: https://pypi.org/project/pip/
 .. _`PyPI`: https://pypi.org/project/pytest-honors/

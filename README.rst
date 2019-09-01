@@ -10,12 +10,12 @@ pytest-honors
     :target: https://pypi.org/project/pytest-honors
     :alt: Python versions
 
-.. image:: https://travis-ci.org/kstrauser/pytest-honors.svg?branch=master
-    :target: https://travis-ci.org/kstrauser/pytest-honors
+.. image:: https://travis-ci.org/aminohealth/pytest-honors.svg?branch=master
+    :target: https://travis-ci.org/aminohealth/pytest-honors
     :alt: See Build Status on Travis CI
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/kstrauser/pytest-honors?branch=master
-    :target: https://ci.appveyor.com/project/kstrauser/pytest-honors/branch/master
+.. image:: https://ci.appveyor.com/api/projects/status/github/aminohealth/pytest-honors?branch=master
+    :target: https://ci.appveyor.com/project/aminohealth/pytest-honors/branch/master
     :alt: See Build Status on AppVeyor
 
 Report on tests that honor constraints and guard against regressions
@@ -133,7 +133,7 @@ Issues
 If you encounter any problems, please `file an issue`_ along with a detailed description.
 
 .. _`MIT`: http://opensource.org/licenses/MIT
-.. _`file an issue`: https://github.com/kstrauser/pytest-honors/issues
+.. _`file an issue`: https://github.com/aminohealth/pytest-honors/issues
 .. _`pytest`: https://github.com/pytest-dev/pytest
 .. _`tox`: https://tox.readthedocs.io/en/latest/
 .. _`pip`: https://pypi.org/project/pip/
