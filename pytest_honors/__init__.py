@@ -68,7 +68,7 @@ def pytest_addoption(parser):
     )
     parser.addini(OPT_REGRESSION_FAIL, fail_help, type="bool", default=False)
 
-    write_help = "if set, store honors counts for later comparison"
+    write_help = "if set, store honorers counts for later comparison"
     group.addoption(
         "--honors-store-counts", action="store_true", dest=OPT_STORE_COUNTS, help=write_help
     )
@@ -133,7 +133,7 @@ def pytest_sessionfinish(session, exitstatus):
 
 
 def fail_on_regressions(session, new_counts):
-    """Raise a ValueError if any constraint honors count decreased from the previous run."""
+    """Raise a ValueError if any constraint's honorers count decreased from the previous run."""
 
     old_counts = session.config.cache.get(CACHE_KEY_COUNTS, None)
     if old_counts is None:
@@ -143,7 +143,9 @@ def fail_on_regressions(session, new_counts):
     for key, old_count in old_counts.items():
         new_count = new_counts.get(key, 0)
         if new_count < old_count:
-            errors.append(f"Constraint {key} honors count dropped from {old_count} to {new_count}")
+            errors.append(
+                f"Constraint {key} honorers count dropped from {old_count} to {new_count}"
+            )
     if errors:
         raise ValueError(errors)
 

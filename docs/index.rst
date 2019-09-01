@@ -125,7 +125,7 @@ Keeping fixed things fixed
 ``pytest --honors-regression-fail`` uses the count information from a previous pytest run to compare against the current testing session. If the coverage for any controls has decreased since the last test run, then pytest fails. Suppose an intern deletes the ``test_unique_email`` unit test. That results in the error::
 
   ValueError: [
-      'Constraint MyControls.EmailAddressesMustBeUnique honors count dropped from 1 to 0'
+      'Constraint MyControls.EmailAddressesMustBeUnique honorers count dropped from 1 to 0'
   ]
 
 You can integrate this in your CI pipeline and know that a rogue developer isn't deleting the constraints you care about.
