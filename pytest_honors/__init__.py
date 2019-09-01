@@ -91,15 +91,22 @@ def pytest_report_teststatus(report):
         _RESULTS[report.nodeid] = report.outcome
 
 
+def get_config_item(session, name):
+    """Return the given config item from either the command line or pytest.ini"""
+
+    value = session.config.getoption(name)
+    if value is None:
+        value = session.config.getini(name)
+    return value
+
+
 def pytest_sessionfinish(session, exitstatus):
     """Report on or validate constraints coverage."""
 
     if exitstatus not in {ExitCode.OK, ExitCode.TESTS_FAILED}:
         return
 
-    reportfile = session.config.getoption(OPT_MARKDOWN_REPORT) or session.config.getini(
-        OPT_MARKDOWN_REPORT
-    )
+    reportfile = get_config_item(session, OPT_MARKDOWN_REPORT)
     if reportfile:
         with open(reportfile, "w") as outfile:
             for line in render_as_markdown(_ITEMS, _RESULTS):
@@ -110,29 +117,26 @@ def pytest_sessionfinish(session, exitstatus):
         for instance, tests in category.items():
             new_counts[f"{instance.__class__.__name__}.{instance.name}"] = len(tests)
 
-    old_counts = session.config.cache.get(CACHE_KEY_COUNTS, None)
-    if old_counts and session.config.getini(OPT_REGRESSION_FAIL):
-        errors = []
-        for key, old_count in old_counts.items():
-            new_count = new_counts.get(key, 0)
-            if new_count < old_count:
-                errors.append(f"Constraint {key} count dropped from {old_count} to {new_count}")
-        if errors:
-            raise ValueError(errors)
+    if get_config_item(session, OPT_REGRESSION_FAIL):
+        fail_on_regressions(session, new_counts)
 
     session.config.cache.set(CACHE_KEY_COUNTS, new_counts)
 
 
-def key_name(tpl):
-    """Return the name of the first item in the tuple."""
+def fail_on_regressions(session, new_counts):
+    """Raise a ValueError if any constraint honors count decreased from the previous run."""
 
-    return tpl[0].name
+    old_counts = session.config.cache.get(CACHE_KEY_COUNTS, None)
+    if old_counts is None:
+        return
 
-
-def key__name__(tpl):
-    """Return the __name__ of the first item in the tuple."""
-
-    return tpl[0].__name__
+    errors = []
+    for key, old_count in old_counts.items():
+        new_count = new_counts.get(key, 0)
+        if new_count < old_count:
+            errors.append(f"Constraint {key} honors count dropped from {old_count} to {new_count}")
+    if errors:
+        raise ValueError(errors)
 
 
 def render_as_markdown(items, results):
@@ -163,3 +167,15 @@ def render_as_markdown(items, results):
                 yield f'  Explanation: "{test.obj.__doc__}"'
                 yield f"  Path: {test.nodeid}"
                 yield f"  Result: {result}"
+
+
+def key_name(tpl):
+    """Return the name of the first item in the tuple."""
+
+    return tpl[0].name
+
+
+def key__name__(tpl):
+    """Return the __name__ of the first item in the tuple."""
+
+    return tpl[0].__name__

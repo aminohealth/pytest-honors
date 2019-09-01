@@ -105,7 +105,7 @@ This shows us all controls that are honored by the tests that we ran. Want to sh
 
 When run like ``pytest --honors-regression-fail``, if the coverage for any controls has decreased since the last test run, the pytest-honors fails. Suppose an intern deletes the ``test_unique_email`` unit test. That results in the error::
 
-    ValueError: ['Constraint MyControls.EmailAddressesMustBeUnique count dropped from 1 to 0']
+    ValueError: ['Constraint MyControls.EmailAddressesMustBeUnique honors count dropped from 1 to 0']
 
 You can integrate this in your CI pipeline and know that a rogue developer isn't deleting the constraints you care about.
 
