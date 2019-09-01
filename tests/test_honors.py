@@ -1,7 +1,5 @@
 """Test the pytest_honors package."""
 
-import pytest
-
 import pytest_honors
 from pytest_honors.constraints import ConstraintsBase
 

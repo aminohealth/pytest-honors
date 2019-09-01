@@ -84,7 +84,7 @@ When run like ``pytest --honors-report-markdown report.md``, we can get nice, hu
 
     - Name: test_unique_email
       Explanation: "None"
-      Path: tests/test_meat.py::test_unique_email
+      Path: tests/test_important_stuff.py::test_unique_email
       Result: passed
 
     ## PasswordsMustBeGood: We don't want bad passwords
@@ -93,7 +93,7 @@ When run like ``pytest --honors-report-markdown report.md``, we can get nice, hu
 
     - Name: test_password_strength
       Explanation: "None"
-      Path: tests/test_meat.py::test_password_strength
+      Path: tests/test_important_stuff.py::test_password_strength
       Result: passed
 
 This shows us all controls that are honored by the tests that we ran. Want to show your auditor that you're checking important controls in your code? Now you have evidence.
