@@ -126,28 +126,31 @@ def pytest_sessionfinish(session, exitstatus):
             new_counts[f"{constraint.__class__.__name__}.{constraint.name}"] = len(tests)
 
     if get_config_item(session, OPT_REGRESSION_FAIL):
-        fail_on_regressions(session, new_counts)
+        old_counts = get_old_counts(session)
+        fail_on_regressions(old_counts, new_counts)
 
     if get_config_item(session, OPT_STORE_COUNTS):
         session.config.cache.set(CACHE_KEY_COUNTS, new_counts)
 
 
-def fail_on_regressions(session, new_counts):
-    """Raise a ValueError if any constraint's honorers count decreased from the previous run."""
+def get_old_counts(session):
+    """Return the previously saved honorers counts."""
 
-    old_counts = session.config.cache.get(CACHE_KEY_COUNTS, None)
-    if old_counts is None:
-        return
+    return session.config.cache.get(CACHE_KEY_COUNTS, {})
+
+
+def fail_on_regressions(old_counts, new_counts):
+    """Raise a ValueError if any constraint's honorers count decreased from the previous run."""
 
     errors = []
     for key, old_count in old_counts.items():
         new_count = new_counts.get(key, 0)
         if new_count < old_count:
             errors.append(
-                f"Constraint {key} honorers count dropped from {old_count} to {new_count}"
+                f"Constraint {key!r} honorers count dropped from {old_count} to {new_count}"
             )
     if errors:
-        raise ValueError(errors)
+        raise ValueError(sorted(errors))
 
 
 def render_as_markdown(items, results):

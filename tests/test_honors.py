@@ -1,5 +1,7 @@
 """Test the pytest_honors package."""
 
+import pytest
+
 import pytest_honors
 from pytest_honors.constraints import ConstraintsGroup
 
@@ -37,8 +39,25 @@ class Func2:
         """Func2's docs"""
 
 
+def test_fail_on_regression():
+    """Decreasing honorers counts gives the expected error."""
+
+    old_results = {"spam": 10, "eggs": 10}
+    new_results = {"spam": 9, "eggs": 8}
+
+    with pytest.raises(ValueError) as error:
+        pytest_honors.fail_on_regressions(old_results, new_results)
+
+    assert error.value.args == (
+        [
+            "Constraint 'eggs' honorers count dropped from 10 to 8",
+            "Constraint 'spam' honorers count dropped from 10 to 9",
+        ],
+    )
+
+
 def test_render_as_markdown():
-    """No two keys may have the same values."""
+    """Known results yield the expected report."""
 
     items = {
         SomeControls: {SomeControls.spam: [Func1], SomeControls.eggs: [Func2]},
