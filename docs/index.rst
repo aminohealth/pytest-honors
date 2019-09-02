@@ -173,7 +173,7 @@ Distributed under the terms of the `MIT`_ license, "pytest-honors" is free and o
 History
 =======
 
-v0.1.2, 2019-09-01: No code changes, just updating the GitHub repo location.
+v0.1.3, 2019-09-01: No code changes, just updating the GitHub repo location.
 
 v0.1.2, 2019-09-01: Cleanup and more documentation.
 
