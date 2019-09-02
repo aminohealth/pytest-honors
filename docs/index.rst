@@ -201,3 +201,4 @@ v0.1.0 / v0.1.1, 2019-08-31: Initial public releases.
 .. _`PyPI`: https://pypi.org/project/pytest-honors/
 .. _`pytest.ini`: https://docs.pytest.org/en/latest/customize.html
 .. _`pytest`: https://github.com/pytest-dev/pytest
+.. _`tox`: https://tox.readthedocs.io/en/latest/
