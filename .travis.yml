@@ -9,6 +9,9 @@ matrix:
         env: TOX_ENV=py36
       - python: 3.7
         env: TOX_ENV=py37
+      - python: 3.8-dev
+        dist: xenial
+        env: TOX_ENV=py38
       - python: pypy3
         env: TOX_ENV=pypy3
       - python: 3.6
