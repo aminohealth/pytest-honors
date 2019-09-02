@@ -3,7 +3,7 @@
 
 import os
 import codecs
-from setuptools import setup
+from setuptools import find_packages, setup
 
 
 def read(fname):
@@ -13,7 +13,7 @@ def read(fname):
 
 setup(
     name="pytest-honors",
-    version="0.1.3",
+    version=read("VERSION").strip(),
     author="Amino, Inc",
     author_email="foss@amino.com",
     maintainer="Amino, Inc",
@@ -23,7 +23,7 @@ setup(
     project_urls={"Documentation": "https://pytest-honors.readthedocs.io/en/latest/"},
     description="Enforce coverage and report on tests that honor constraints",
     long_description=read("README.rst"),
-    py_modules=["pytest_honors"],
+    packages=find_packages(),
     python_requires=">=3, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
     install_requires=["pytest>=3.5.0"],
     classifiers=[
