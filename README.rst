@@ -18,7 +18,7 @@ pytest-honors
     :target: https://ci.appveyor.com/project/kstrauser/pytest-honors-p7p8g/branch/master
     :alt: See Build Status on AppVeyor
 
-Report on tests that honor constraints and guard against regressions
+Report on tests that honor constraints, and guard against regressions
 
 ----
 

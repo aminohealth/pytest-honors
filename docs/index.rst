@@ -6,7 +6,7 @@
 pytest-honors
 =============
 
-pytest-honors reports on tests that honor constraints and guards against regressions. It's a `pytest`_ plugin for automatically generating reports showing which of your project's unit tests "honor" (or "prove" or "demonstrate" or "support") various constraints that you care about. It can also be integrated with your build pipeline to make sure that you never accidentally remove the tests that are most important to you.
+pytest-honors reports on tests that honor constraints, and guards against regressions. It's a `pytest`_ plugin for automatically generating reports showing which of your project's unit tests "honor" (or "prove" or "demonstrate" or "support") various constraints that you care about. It can also be integrated with your build pipeline to make sure that you never accidentally remove the tests that are most important to you.
 
 What it does
 ============
