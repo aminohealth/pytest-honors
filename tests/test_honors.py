@@ -39,6 +39,24 @@ class Func2:
         """Func2's docs"""
 
 
+def test_make_counts():
+    """make_counts summarizes control honorer counts correctly."""
+
+    items = {
+        SomeControls: {
+            SomeControls.spam: ["test_one", "test_two"],
+            SomeControls.eggs: ["test_three"],
+        },
+        OtherControls: {OtherControls.favorite_color: ["test_one", "test_three"]},
+    }
+
+    assert pytest_honors.make_counts(items) == {
+        "SomeControls.spam": 2,
+        "SomeControls.eggs": 1,
+        "OtherControls.favorite_color": 2,
+    }
+
+
 def test_fail_on_regression():
     """Decreasing honorers counts gives the expected error."""
 

@@ -120,11 +120,7 @@ def pytest_sessionfinish(session, exitstatus):
             for line in render_as_markdown(_ITEMS, _RESULTS):
                 outfile.write(line + "\n")
 
-    new_counts = {}
-    for group_members in _ITEMS.values():
-        for constraint, tests in group_members.items():
-            new_counts[f"{constraint.__class__.__name__}.{constraint.name}"] = len(tests)
-
+    new_counts = make_counts(_ITEMS)
     if get_config_item(session, OPT_REGRESSION_FAIL):
         old_counts = get_old_counts(session)
         fail_on_regressions(old_counts, new_counts)
@@ -137,6 +133,16 @@ def get_old_counts(session):
     """Return the previously saved honorers counts."""
 
     return session.config.cache.get(CACHE_KEY_COUNTS, {})
+
+
+def make_counts(items):
+    """Return a dict of string constraint names to the count of their honorers."""
+
+    return {
+        f"{constraint.__class__.__name__}.{constraint.name}": len(tests)
+        for group_members in items.values()
+        for constraint, tests in group_members.items()
+    }
 
 
 def fail_on_regressions(old_counts, new_counts):
