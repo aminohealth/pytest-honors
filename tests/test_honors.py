@@ -1,5 +1,8 @@
 """Test the pytest_honors package."""
 
+from typing import NamedTuple
+from unittest import mock
+
 import pytest
 
 import pytest_honors
@@ -37,6 +40,31 @@ class Func2:
 
     def obj(self):
         """Func2's docs"""
+
+
+class MockReport(NamedTuple):
+    nodeid: str
+    when: str
+    outcome: str
+
+
+@pytest.mark.parametrize(
+    "nodeid,when,outcome,save",
+    [
+        ("test1", "setup", "passed", False),
+        ("test2", "call", "skipped", True),
+        ("test3", "teardown", "failed", False),
+    ],
+)
+def test_pytest_report_teststatus(nodeid, when, outcome, save):
+    """Test statuses are recorded after call."""
+
+    expected = {None: None}
+    with mock.patch.dict(pytest_honors._RESULTS, expected, clear=True):
+        pytest_honors.pytest_report_teststatus(MockReport(nodeid, when, outcome))
+        if save:
+            expected[nodeid] = outcome
+        assert pytest_honors._RESULTS == expected
 
 
 def test_make_counts():
