@@ -21,7 +21,7 @@ setup(
     license="MIT",
     url="https://github.com/aminohealth/pytest-honors",
     project_urls={"Documentation": "https://pytest-honors.readthedocs.io/en/latest/"},
-    description="Enforce coverage and report on tests that honor constraints",
+    description="Report on tests that honor constraints, and guard against regressions",
     long_description=read("README.rst"),
     packages=find_packages(),
     python_requires=">=3, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
