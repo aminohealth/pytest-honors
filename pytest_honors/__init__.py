@@ -4,7 +4,7 @@ import enum
 from operator import attrgetter
 from typing import Callable, Dict, List, Type
 
-from pytest import ExitCode
+from pytest import ExitCode, PytestWarning
 
 from .constraints import ConstraintsGroup
 
@@ -180,7 +180,15 @@ def render_as_markdown(items, results):
             yield "Supporting evidence:"
             yield ""
             for test in sorted(tests, key=attrgetter("name")):
-                result = results[test.nodeid]
+                try:
+                    result = results[test.nodeid]
+                except KeyError:
+                    test.warn(
+                        PytestWarning(
+                            "An honoring node can't be included in the report because it failed."
+                        )
+                    )
+                    continue
                 if result != "passed":
                     result = f"**{result}**"
                 yield f"- Name: {test.name}"

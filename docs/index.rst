@@ -173,6 +173,8 @@ Distributed under the terms of the `MIT`_ license, "pytest-honors" is free and o
 History
 =======
 
+v0.1.5, 2020-03-05: Don't explode when an honorer fails. Emit a warning instead.
+
 v0.1.4, 2019-09-01: Packaging fixes
 
 v0.1.3, 2019-09-01: No code changes, just updating the GitHub repo location.
